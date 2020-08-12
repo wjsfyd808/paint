@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Paint</title>
+    <link href="styles.css" rel="stylesheet">
+    <script defer src="js/app.js" type="module"></script>
+</head>
+<body>   
+        <div class="toolbox left">
+                <div class="group commands">
+                    <div class="item" onclick="onclick=document.all.getfile.click()">
+                        <img src="images/upload-icon.png" width="20px" height="20px" alt="찾아보기..." title="Upload">
+                        <!-- png파일만 열 수 있게 파일태그 생성 -->
+                        <!-- 파일 업로드 input은 버튼이 디폴트여서 display:none으로 없애주고 그거를 이미지파일로 감싼다-->
+                        <input type="file" id="getfile" accept="png/*" style="display:none" >
+                    </div>  
+                    <div class="item" data-command="download"  title="Download">
+                        <img src="images/download-icon.png"/>
+                    </div>
+
+                    <!-- 지호 : 여기에 필터선택하는 메뉴바 나오는 버튼 -->
+                    <div class="item" data-command="filter" title="Filter" id="filter">
+                        <img src="images/filter-icon.png" />
+                    </div>
+                </div>
+               
+                <div class="group tools">
+                    <div class="item" data-tool="pencil" title = "Pencils" onclick="openNav(this.title)">
+                        <img src="images/pencil-icon.png"/>
+                    </div>
+                    <div class="item" data-tool="paint-bucket" title="PaintBucketTool" onclick="closeNav()">
+                        <img src="images/paint-bucket-icon.png"/>
+                    </div>
+                    
+                    <div class="item" data-tool="eraser" title="EraserTool" onclick="openNav(this.title)">
+                        <img src="images/eraser-icon.png"/>
+                    </div>
+    
+                    <div class="item" data-tool="texttool" title="TextTool" onclick="openNav(this.title)">
+                        <img src="images/text-icon.png"/>
+                    </div>
+                
+                    <div class="item" data-tool="stamp" title="StampTool" id="stamp" onclick="closeNav()">
+                        <img src="images/stamp-icon.png"/>
+                    </div>
+                
+                </div>
+               
+               
+                    <div class="group tools">
+                    <div class="item active" data-tool="line" title="LineTool" onclick="openNav(this.title)">
+                        <img src="images/line-icon.png" />
+                    </div>
+                    <div class="item" data-tool="rectangle" title="RectangleTool" onclick="openNav(this.title)">
+                        <img src="images/rect-icon.png"/>
+                    </div>
+                    <div class="item" data-tool="circle" title="CircleTool" onclick="openNav(this.title)">
+                        <img src="images/circle-icon.png"/>
+                    </div>
+                    <div class="item" data-tool="triangle" title="TriangleTool" onclick="openNav(this.title)">
+                        <img src="images/tri-icon.png"/>
+                    </div>
+                </div>
+                
+                <div class="group tools">
+                    <div class="item" data-tool="rotateClockWise" title="Rotation Tool" onclick="closeNav()">
+                            <img src="images/rotate-icon.png"/>
+                    </div>
+                    <div class="item" id="crop" data-tool="crop" title="Crop Tool" onclick="closeNav()">
+                        <img src="images/Crop-icon.png"/>
+                    </div>
+                    <div class="item" id="verticalFlip" data-tool="verticalFlip" title="Flip Tool" onclick="closeNav()">
+                        <img src="images/verticalFlip-icon.png"/>
+                    </div>
+                    <div class="item" id="horizontalFlip" data-tool="horizontalFlip" title="Flip Tool" onclick="closeNav()">
+                        <img src="images/horizontalFlip-icon.png"/>
+                    </div>
+                </div>
+
+                <div class="group else tools">
+
+                    <div class="item" id="selectObject" data-tool="selectObject" title="Select Tool"  onclick="closeNav()">
+                        <img src="images/selectObject.png"/>
+                    </div>
+                    <div class="item" data-tool="snow" title="Snow"  onclick="closeNav()">
+                        <img src="images/snow.png"/>
+                    </div>
+                    <!-- <div  onclick="clock()" class="item" data-tool="clock" title="Clock"  onclick="closeNav()">
+                        <img src="images/clock.png"/>
+                    </div> -->
+                </div>
+            </div>
+
+
+         
+        <div class="group side1" id="sideNav1">
+           <div class ="group pencil" id="pencilList" style='display:none'>
+            
+            <div class="item active" data-tool-pencil="pencil"display='none' title="pencil" id="pencil" onclick="openNav2(this.title)"> 
+                    <img src="images/pencil-icon.png"/>
+                </div>
+                
+                <div class="item" data-tool-pencil="brush" title="brush" onclick="openNav2(this.title)">
+                    <img src="images/brush-icon.png"/>
+                </div>
+                
+                <div class="item" data-tool-pencil="dashed" title="dashed" onclick="openNav2(this.title)"> 
+                    <img src="images/dashed.png"/>
+                </div>
+                
+                <div class="item" data-tool-pencil="dotted" title="dotted" onclick="openNav2(this.title)">
+                    <img src="images/dotted.png"/>
+                </div>
+                
+                <div class="item" data-tool-pencil="spray" title="spray" onclick="openNav2(this.title)">
+                    <img src="images/spray.png"/>
+                </div>
+                
+                <div class="item" data-tool-pencil="pattern" title="pattern" onclick="openNav2(this.title)">
+                    <img src="images/star.png"/>
+                </div>
+            
+            </div>
+            
+            <div class="group stroks pencil" id="stroks" style='display:none'>
+                <div class="item active" data-line-width="1" title="1 Pixel">
+                    <div class="stroke" style="width:1px;height: 1px;"></div>
+                </div>
+                <div class="item" data-line-width="3" title="3 Pixels">
+                    <div class="stroke" style="width:3px;height: 3px;"></div>
+                </div>
+                <div class="item" data-line-width="5" title="5 Pixels">
+                    <div class="stroke" style="width:5px;height: 5px;"></div>
+                </div>
+                <div class="item" data-line-width="7" title="7 Pixels">
+                    <div class="stroke" style="width:7px;height: 7px;"></div>
+                </div>
+                <div class="item" data-line-width="9" title="9 Pixels">
+                    <div class="stroke" style="width:9px;height: 9px;"></div>
+                </div>
+                <div class="item" data-line-width="11" title="11 Pixels">
+                    <div class="stroke" style="width:11px;height: 11px;"></div>
+                </div>
+                <div class="item" data-line-width="13" title="13 Pixels">
+                    <div class="stroke" style="width:13px;height: 13px;"></div>
+                </div>
+                <div class="item" data-line-width="15" title="15 Pixels">
+                    <div class="stroke" style="width:15px;height: 15px;"></div>
+                </div>
+                <div class="item" data-line-width="17" title="17 Pixels">
+                    <div class="stroke" style="width:17px;height: 17px;"></div>
+                </div>
+                <div class="item" data-line-width="19" title="19 Pixels">
+                    <div class="stroke" style="width:19px;height: 19px;"></div>
+                </div>
+            </div>
+                
+            <div class="group textsize" id="textsize" style='display:block'>
+                    <div class="item active" data-font-size="16" title="16 size">16
+                        <div class="font" style="width:1px;height:1px;"></div>
+                    </div>
+                    <div class="item" data-font-size="24" title="24 size"> 24
+                        <div class="font" style="width:1px;height:1px;"></div>
+                    </div>
+                    <div class="item" data-font-size="32" title="32 size"> 32
+                        <div class="font" style="width:2px;height:2px;"></div>
+                    </div>
+                    <div class="item" data-font-size="40" title="16 size"> 40
+                        <div class="font" style="width:1px;height:1px;"></div>
+                    </div>
+                    <div class="item" data-font-size="48" title="48 size"> 48
+                        <div class="font" style="width:3px;height:3px;"></div>
+                    </div>
+                    <div class="item" data-font-size="56" title="48 size"> 56
+                        <div class="font" style="width:3px;height:3px;"></div>
+                    </div>
+                    <div class="item" data-font-size="64" title="64 size"> 64
+                        <div class="font" style="width:4px;height:4px;"></div>
+                    </div>
+                    <div class="item" data-font-size="72" title="72 size"> 72
+                        <div class="font" style="width:5px;height:5px;"></div>
+                    </div>
+                    <div class="item" data-font-size="80" title="80 size"> 80
+                        <div class="font" style="width:5px;height:5px;"></div>
+                    </div>
+                    <div class="item" data-font-size="88" title="80 size"> 88
+                        <div class="font" style="width:5px;height:5px;"></div>
+                    </div>
+                    <div class="item" data-font-size="96" title="80 size"> 96
+                        <div class="font" style="width:5px;height:5px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group side2" id="sideNav2">
+                <div class="group stroks pencil" id='side2stroks' style='display:none'>
+                    <div class="item" data-line-width="1" title="1 Pixel">
+                        <div class="stroke" style="width:1px;height: 1px;"></div>
+                    </div>
+                    <div class="item" data-line-width="3" title="3 Pixels">
+                        <div class="stroke" style="width:3px;height: 3px;"></div>
+                    </div>
+                    <div class="item" data-line-width="5" title="5 Pixels">
+                        <div class="stroke" style="width:5px;height: 5px;"></div>
+                    </div>
+                    <div class="item" data-line-width="7" title="7 Pixels">
+                        <div class="stroke" style="width:7px;height: 7px;"></div>
+                    </div>
+                    <div class="item" data-line-width="9" title="9 Pixels">
+                        <div class="stroke" style="width:9px;height: 9px;"></div>
+                    </div>
+                    <div class="item" data-line-width="11" title="11 Pixels">
+                        <div class="stroke" style="width:11px;height: 11px;"></div>
+                    </div>
+                    <div class="item" data-line-width="13" title="13 Pixels">
+                        <div class="stroke" style="width:13px;height: 13px;"></div>
+                    </div>
+                    <div class="item" data-line-width="15" title="15 Pixels">
+                        <div class="stroke" style="width:15px;height: 15px;"></div>
+                    </div>
+                    <div class="item" data-line-width="17" title="17 Pixels">
+                        <div class="stroke" style="width:17px;height: 17px;"></div>
+                    </div>
+                    <div class="item" data-line-width="19" title="19 Pixels">
+                        <div class="stroke" style="width:19px;height: 19px;"></div>
+                    </div>
+                </div>
+        
+                <div class="group stroks brush" id='side2brush' style='display:block'>
+                    <div class="item active" data-brush-size="4"  title="4 Pixels">
+                        <div class="stroke" style="width:4px;height: 4px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="8" title="8 Pixels">
+                        <div class="stroke" style="width:8px;height: 8px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="12" title="12 Pixels">
+                        <div class="stroke" style="width:12px;height: 12px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="16" title="16 Pixels">
+                        <div class="stroke" style="width:16px;height: 16px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="20" title="20 Pixels">
+                        <div class="stroke" style="width:20px;height: 20px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="24" title="24 Pixels">
+                        <div class="stroke" style="width:24px;height: 24px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="28" title="28 Pixels">
+                        <div class="stroke" style="width:28px;height: 28px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="32" title="32 Pixels">
+                        <div class="stroke" style="width:32px;height: 32px;"></div>
+                    </div>
+                    <div class="item" data-brush-size="36" title="36 Pixels">
+                        <div class="stroke" style="width:36px;height: 36px;"></div>
+                    </div>
+                        
+
+                </div>
+
+    
+        
+               
+            </div>
+
+        <div class="toolbox left4" style="display:none" id="left4">
+            <div class="stamp">
+                <div class="item active" data-tool-stamp="stamp0" title="stamp0"></div>
+                <div class="item" data-tool-stamp="1" title="stamp1">
+                    <img id='Stamp1' src="images/z_stamp_1.png" style="width:30; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="2" title="stamp2">
+                    <img id='Stamp2' src="images/z_stamp_2.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="3" title="stamp3">
+                    <img id='Stamp3' src="images/z_stamp_3.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="4" title="stamp4">
+                    <img id='Stamp4' src="images/z_stamp_4.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="5" title="stamp5">
+                    <img id='Stamp5' src="images/z_stamp_5.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="6" title="stamp6">
+                    <img id='Stamp6' src="images/z_stamp_6.png"style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="7" title="stamp7">
+                    <img id='Stamp7' src="images/z_stamp_7.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="8" title="stamp8">
+                    <img id='Stamp8' src="images/z_stamp_8.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="9" title="stamp9">
+                    <img id='Stamp9' src="images/z_stamp_9.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="10" title="stamp10">
+                    <img id='Stamp10' src="images/z_stamp_10.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="11" title="stamp11">
+                    <img id='Stamp11' src="images/z_stamp_11.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="12" title="stamp12">
+                    <img id='Stamp12' src="images/z_stamp_12.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="13" title="stamp13">
+                    <img id='Stamp13' src="images/z_stamp_13.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="14" title="stamp14">
+                    <img id='Stamp14' src="images/z_stamp_14.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="15" title="stamp15">
+                    <img id='Stamp15' src="images/z_stamp_15.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="16" title="stamp16">
+                    <img id='Stamp16' src="images/z_stamp_16.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="17" title="stamp17">
+                    <img id='Stamp17' src="images/z_stamp_17.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="18" title="stamp18">
+                    <img id='Stamp18' src="images/z_stamp_18.png" style="width:30px; height:30px">
+                </div>
+                <div class="item" data-tool-stamp="19" title="stamp19">
+                    <img id='Stamp19' src="images/z_stamp_19.png" style="width:30px; height:30px">
+                </div>
+                </div>
+        </div>
+
+        <div class="toolbox left1" style="display:none" id="left1" >
+            <div class="group commands">
+                <div>
+                    <button type="submit" value="블러" class="filter"><img src="images\blur-icon.png" width="50px" height="50px" title="blur"></button><br>
+                    <button type="submit" value="검정" class="filter"><img src="images\brightness-icon.png" width="50px" height="50px" title="brightness"></button><br>
+                    <button type="submit" value="대비" class="filter"><img src="images\contrast-icon.png" width="50px" height="50px" title="contrast"></button><br>
+                    <button type="submit" value="채도변경" class="filter"><img src="images\gray-icon.png" width="50px" height="50px" title="gray"></button><br>
+                    <button type="submit" value="반전" class="filter"><img src="images\invert-icon.png" width="50px" height="50px" title="invert"></button><br>
+                    <button type="submit" value="흑백" class="filter"><img src="images\saturate-icon.png" width="50px" height="50px" title="saturate"></button><br>
+                    <button type="submit" value="sepia" class="filter"><img src="images\sepia-icon.png" width="50px" height="50px" title="sepia"></button><br>
+                    <button type="submit" value="none" class="filter"><img src="images\none-icon.png" width="50px" height="50px" title="none"></button><br>
+                    <button type="submit" value="control" class="filter"><img src="images\control-icon.png" width="50px" height="50px" title="control"></button><br>
+                    <!-- <button type="submit" value="opacity" class="filter"><img src="images\opacity-icon.png" width="50px" height="50px" title="control"></button><br> -->
+                </div>
+            </div>
+        </div>
+        <!-- 모달창 들어가깅,,, -->
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+                    <!-- 모달의 내용이 들어있는 content -->
+                      <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <!-- 모달창 제목, 텍스트 가운데로 오게 하기 -->
+                        <div style="text-align: center;">
+                        <p style="font-weight:900; font-size: 20px;">필터 조정</p>
+                        </div>
+                        <!-- div 슬라이드컨테이너에 슬라이더 담음 -->
+                        <div class="slidecontainer" style="margin-left: 120px;" >
+
+                            <p style="font-weight:600;">블러 : <span id="blurValue" style="font-weight: normal;"></span><span style="font-weight: normal;">px</span></p>
+                            <input type="range" min="0" max="10" value="0" class="slider" id="blurRange">
+            
+                            <p style="font-weight:600;">흑백 : <span id="grayValue" style="font-weight: normal;"></span>%</p>
+                            <input type="range" min="0" max="100" value="0" class="slider" id="grayRange"><br>
+
+                            <p style="font-weight:600;">채도 : <span id="saturateValue" style="font-weight: normal;"></span></p>
+                            <input type="range" min="1" max="10" value="0" class="slider" id="saturateRange"><br>
+
+                            <!-- <p style="font-weight:600;">투명도 : <span style="font-weight: normal;">0.</span><span id="opacityValue" style="font-weight: normal;"></span></p>
+                            <input type="range" min="1" max="10" value="10" class="slider" id="opacityRange"><br> -->
+                            <!-- 필터 적용하는 버튼 -->
+                            <div style="text-align: right;">
+                                <button type="submit" value="save" class="save" onclick="Save();">적용</button>
+                            </div>
+                          </div>
+                      </div>
+    </div>
+
+           
+
+        <div class="toolbox left3" style="display:none" id="left3" >
+            <div class="group commands">
+                <div>
+                    <button type="submit" value="cropBtn" class="cropC" >
+                        <img src="images/cropBtn.png" title="Click Crop">
+                    </button><br>
+                   </div>
+            </div>
+        </div>
+        <div class="toolbox right2" style="display:none" id="right2" >
+            <div class="group commands">
+                <div id="story">
+                </div>
+            </div>
+        </div>
+
+        <canvas id="canvas" width="700" height="500"></canvas>
+        
+        <!-- 오른쪽에 나오는 히스토리 -->
+        <div class="toolbox right">
+            <div class="group undo-redo">
+
+            <div class="item" data-command="history" title="History">
+                <img src="images/history-icon.png"/>
+            </div>
+
+             <div class="item" data-command="undo"  title="Undo">
+                    <img src="images/undo-icon.png"/>
+            </div>
+
+            <div class="item" data-command="redo"  title="Redo">
+                    <img src="images/redo-icon.png"/>
+                </div>
+            </div>
+            
+
+            <div class="group colors">
+                <div class="item" id="colorPicker" data-tool="colorPicker" title="colorPicker">
+                    <img src="images/picker-icon.png"/>
+                </div>
+                <div class="none" id = "color" style = "width: 30px; height:30px;">
+                </div> 
+                <div class="item" data-color="#ffffff">
+                    <div class="swatch" style="background-color:#ffffff"></div>
+                </div>
+                <div class="item active" data-color="#000000">
+                    <div class="swatch" style="background-color:#000000"></div>
+                </div>
+                <div class="item" data-color="#ff0000">
+                    <div class="swatch" style="background-color:#ff0000"></div>
+                </div>
+                <div class="item" data-color="#00ff00">
+                    <div class="swatch" style="background-color:#00ff00"></div>
+                </div>
+                <div class="item" data-color="#0000ff">
+                    <div class="swatch" style="background-color:#0000ff"></div>
+                </div>
+                <div class="item" data-color="#00ffff">
+                    <div class="swatch" style="background-color:#00ffff"></div>
+                </div>
+                <div class="item" data-color="#ff00ff">
+                    <div class="swatch" style="background-color:#ff00ff"></div>
+                </div>
+                <div class="item" data-color="#ffff00">
+                    <div class="swatch" style="background-color:#ffff00"></div>
+                </div>
+                <div class="item" data-color="#c46f0f">
+                    <div class="swatch" style="background-color:#c46f0f"></div>
+                </div>
+                <div class="item" data-color="#fd8f27">
+                    <div class="swatch" style="background-color:#fd8f27"></div>
+                </div>
+                <div class="item" data-color="#0099ff">
+                    <div class="swatch" style="background-color:#0099ff"></div>
+                </div>
+                <div class="item" data-color="#ff009d">
+                    <div class="swatch" style="background-color:#ff009d"></div>
+                </div>
+            </div>
+            <div class="group zoom">
+            <div class="item" data-tool="ZoomIn" title="ZoomIn" onclick="zoomin()">
+                <img src="images/zoomin-icon.png"/>
+            </div>
+            <div class="item" data-tool="ZoomOut" title="ZoomOut" onclick="zoomout()">
+                <img src="images/zoomout-icon.png"/>
+            </div>
+        </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+        <!-- 사이드바 함수들 -->
+        <script>
+            function openNav(title) {
+                if(title == 'Pencils'){
+                document.getElementById("sideNav1").style.width = "45px";
+
+                $('#left1').fadeOut(300, function() { });
+                $('#left4').fadeOut(300, function() { });
+
+                document.getElementById("stroks").style.display = 'none';
+                document.getElementById("textsize").style.display = 'none';
+                document.getElementById("pencilList").style.display = 'block';
+            }
+               else if(title == "EraserTool"||title =="LineTool"||
+               title=="RectangleTool"||title=="CircleTool"||title=="TriangleTool"){
+                   document.getElementById("sideNav1").style.width = "45px";
+                   document.getElementById("sideNav2").style.width = "0"
+
+                $('#left1').fadeOut(300, function() { });
+                $('#left4').fadeOut(300, function() { });
+
+                   document.getElementById("pencilList").style.display = 'none';
+                   document.getElementById("textsize").style.display = 'none';
+                   document.getElementById("stroks").style.display = 'block';
+               }
+               else if(title =="TextTool"){
+                document.getElementById("sideNav1").style.width = "45px";
+                document.getElementById("sideNav2").style.width = "0"
+
+                $('#left1').fadeOut(300, function() { });
+                $('#left4').fadeOut(300, function() { });
+
+                document.getElementById("pencilList").style.display = 'none';
+                document.getElementById("stroks").style.display = 'none';
+                document.getElementById("textsize").style.display = 'block';
+                }else
+                document.getElementById("sideNav1").style.width = "0";
+                
+            }
+            function closeNav(title) {
+
+                $('#left1').fadeOut(300, function() { });
+                $('#left4').fadeOut(300, function() { });
+                
+                document.getElementById("sideNav1").style.width = "0";
+                document.getElementById("sideNav2").style.width = "0";
+            }      
+            
+            function openNav2(title){
+                if(title == "brush"){
+                    document.getElementById("sideNav2").style.width = "45px";
+
+                    document.getElementById("side2stroks").style.display = 'none';
+                    document.getElementById("side2brush").style.display = 'block';
+                }else{
+                    document.getElementById("sideNav2").style.width = "45px";
+
+                    document.getElementById("side2brush").style.display = 'none';
+                    document.getElementById("side2stroks").style.display = 'block';
+
+                }
+
+            }
+
+            function zoomin(){
+                var canvas = document.getElementById('canvas');
+                var currWidth = canvas.clientWidth;
+           
+                canvas.style.width = (currWidth + 100) + "px";
+            }
+            function zoomout(){
+                var canvas = document.getElementById('canvas');
+                var currWidth = canvas.clientWidth;
+                if(currWidth == 100) return false;
+              else{
+                canvas.style.width = (currWidth - 100) + "px";
+                }
+            }
+
+            var file = document.querySelector('#getfile');
+            var btnArr = document.getElementsByClassName('filter');
+            var canvas = document.getElementById('canvas');
+            var filter = document.getElementById('filter');
+            var choice = document.getElementById('choice');
+            var stamp = document.getElementById('stamp');
+            var toolbox1 = document.getElementById('left1');
+            var toolbox2 = document.getElementById('left2');
+            var toolbox4 = document.getElementById('left4');
+            var isFirst = true; // 버튼 눌렀을때 첫번째클릭인지 확인하는 변수, 첫번째면 true
+            var tmpImg =canvas;
+            var ctx = canvas.getContext('2d');
+            
+            var savedImage = new Image();
+
+            // 모달창 함수들
+            // 모달 DOM 가져옴
+            var modal = document.getElementById("myModal");
+            // var modal2 = document.getElementById("myModal2");
+                    
+            var span = document.getElementsByClassName("close")[0];
+            var blurSlider = document.getElementById("blurRange");
+            var blurOutput = document.getElementById("blurValue");
+            var graySlider = document.getElementById("grayRange");
+            var grayOutput = document.getElementById("grayValue");
+            var saturateSlider = document.getElementById("saturateRange");
+            var saturateOutput = document.getElementById("saturateValue");
+            // var opacitySlider = document.getElementById("opacityRange");
+            // var opacityOutput = document.getElementById("opacityValue");
+
+
+            blurOutput.innerHTML = blurSlider.value;
+            grayOutput.innerHTML = graySlider.value;
+            saturateOutput.innerHTML = saturateSlider.value;
+            // opacityOutput.innerHTML = opacitySlider.value;
+                    
+            blurSlider.oninput = function() {
+                blurOutput.innerHTML = blurSlider.value;
+            }
+            graySlider.oninput = function() {
+                grayOutput.innerHTML = graySlider.value;
+            }
+            saturateSlider.oninput = function() {
+                saturateOutput.innerHTML = saturateSlider.value;
+            }
+            // opacitySlider.oninput = function() {
+            //     opacityOutput.innerHTML = opacitySlider.value;
+            // }
+            
+            // 버튼 클릭시 모달창 열린다
+            btnArr[8].onclick = function() {
+              modal.style.display = "block";
+            }
+
+            // btnArr[9].onclick = function() {
+            //     modal2.style.display = "block";
+            // }
+            
+            // 닫기버튼 눌리면 모달창 없애기
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // 닫기버튼 눌리면 모달창 없애기
+            // span.onclick = function() {
+            //     modal2.style.display = "none";
+            // }
+            
+            // 사용자가 모달창 바깥 눌러도 모달창 닫힘
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = "none";
+              }
+            }
+
+            // 적용버튼 누르면 자기맘대로 속성 추가 가능
+            function Save() {
+                // this.clsImage = new Image();
+                // this.dataURL = this.canvas.toDataURL();
+                // this.clsImage.src = this.dataURL;
+
+                // ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+                // ctx.globalAlpha = opacitySlider.value*0.1;
+                // ctx.filter = 'blur('+blurSlider.value+'px) grayscale('+graySlider.value +'%) saturate('+ saturateSlider.value +')';
+                // ctx.filter = 'none';
+                // ctx.drawImage(clsImage,0,0);
+                // ctx.globalAlpha = 1;
+
+                ctx.filter = 'blur('+blurSlider.value+'px) grayscale('+graySlider.value +'%) saturate('+ saturateSlider.value +')';
+                ctx.drawImage(savedImage,0,0);
+                ctx.filter = 'none';
+
+                // 적용버튼 누르면 모달창도 닫아지기
+                modal.style.display = "none";
+            }
+
+            // function opacitySave() {
+            //     clsImage = new Image();
+            //     dataURL = canvas.toDataURL();
+            //     clsImage.src = dataURL;
+
+            //     ctx.clearRect(0,0,canvas.width, canvas.height);
+            //     ctx.globalAlpha = opacitySlider.value*0.1;
+            //     ctx.drawImage(clsImage,0,0);
+            //     ctx.globalAlpha = 1;
+
+            //     dataURL = canvas.toDataURL();
+            //     clsImage.src = dataURL;
+
+            //     modal2.style.display = "none";
+            // }
+
+            window.onload = function() {
+
+                stamp.onclick = function() {
+                    closeNav();
+                    $('#left1').fadeOut(300, function() { });
+                    if(isFirst){
+                        // alert("되나?");
+                        $('#left4').fadeIn(300, function() { });
+                        isFirst = false; // 한번 클릭했으므로 false
+                    }
+                    else if(!isFirst){ // 두번째 클릭때는 열려진 메뉴바를 닫아준다
+                        // alert("되나?2");
+                        $('#left4').fadeOut(300, function() { });
+                        isFirst = true; // 그리고 다시 초기화
+                    }
+                }
+
+                // 파일 업로드 함수
+                // 값이 변결될때 호출되는 이벤트핸들러 -> onchange
+                file.onchange = function() {
+                // 입력된 파일객체들을 리스트 형태로 저장
+                var fileList = file.files;
+                // 파일리더 객체 새로 생성
+                var reader = new FileReader();
+                // 이미지를 url데이터로 표현하는 방식
+                // 실제로 이미지 링크 대신 Data URI를 넣으면 이미지가 표시된다.
+                // 이거의 결과값을 reader.result로 불러올 수 있음
+                reader.readAsDataURL(fileList[0]);
+                // console.log(reader.result);
+                
+                // onload? 해당객체가 웹페이지에 로드될때 실행되는 메소드
+                reader.onload = function() {
+                    // drawImage 메소드에 넣기 위해 이미지 객체 생성
+                    var tmpImage = new Image();
+                    // reader로 읽은 이미지를 객체에 넣기
+                    tmpImage.src = reader.result;
+                
+                    // 이미지가 웹페이지에 로드될때 실행되는 메소드
+                    tmpImage.onload = function() {
+                    
+                        // 이미지를 캔버스크기만큼 캔버스에 그리기
+                        // drawImage(IMG, X, Y, 폭, 높이);
+                        // ctx.globalAlpha = 0.2;
+                        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+                    
+                        // canvas에 그린 이미지를 다시 data-url로 변환
+                        var dataURI = canvas.toDataURL("png/jpeg");
+                        // id가 canvas인 요소의 src에 dataURI 넣기
+                        document.querySelector("canvas").src = dataURI;
+                        }
+                    }
+                }
+
+                // 필터 적용하는 함수
+                filter.onclick = function() {
+                    savedImage.src=canvas.toDataURL();
+                    closeNav();
+                    $('#left4').fadeOut(300, function() { });
+                    if(isFirst){
+                        console.log(isFirst);
+                        // jQuery로 left1박스 나타낼때 애니메이션 효과 주기
+                        $('#left1').fadeIn(300, function() { });
+                        isFirst = false; // 한번 클릭했으므로 false
+                        // toolbox1.setAttribute('style', 'display:block');
+                         // 필터 적용하기
+                        btnArr[0].onclick = blur;
+                        btnArr[1].onclick = brightness;
+                        btnArr[2].onclick = contrast;
+                        btnArr[3].onclick = grayscale;
+                        btnArr[4].onclick = invert;
+                        btnArr[5].onclick = saturate;
+                        btnArr[6].onclick = sepia;
+                        btnArr[7].onclick = none;
+                        
+                        function none() {
+
+                            ctx.drawImage(savedImage,0,0);
+                            
+                        }
+                        function blur() {
+                            ctx.filter = 'blur(4px)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                        
+                        function brightness() {
+                            ctx.filter = 'brightness(0.4)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                        function contrast() {
+                            ctx.filter = 'contrast(200%)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                        function grayscale() {
+                            ctx.filter = 'grayscale(50%)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                        function invert() {
+                            ctx.filter = 'invert(75%)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                        function saturate() {
+                            ctx.filter = 'saturate(30%)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                        function sepia() {
+                            ctx.filter = 'sepia(60%)';
+                            ctx.drawImage(savedImage,0,0);
+                            console.log(savedImage);
+                            ctx.filter = 'none';
+                        }
+                    }
+                    else if(!isFirst){ // 두번째 클릭때는 열려진 메뉴바를 닫아준다
+                        $('#left1').fadeOut(300, function() { });
+                        // toolbox1.setAttribute('style', 'display:none'); // 열린 메뉴바 닫기
+                        isFirst = true; // 그리고 다시 초기화
+                    }
+                }
+
+                
+            }
+        </script>
+</body>
+</html>
